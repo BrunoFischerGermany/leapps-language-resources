@@ -128,8 +128,13 @@ def _language_row_label(code: str) -> str:
     pair = LANGUAGE_NAMES.get(code)
     if pair:
         english, native = pair
-        return f"{english} / {native} ({code})"
+        return f"{native} / {english} ({code})"
     return f"{code} / {code} ({code})"
+
+
+def _codes_missing_from_language_names(non_english_codes: list[str]) -> list[str]:
+    """Locale folders with translation files but no LANGUAGE_NAMES entry."""
+    return sorted(c for c in non_english_codes if c not in LANGUAGE_NAMES)
 
 
 def _build_svg(title: str, source_key_count: int, rows: list[LangStats]) -> str:
@@ -208,7 +213,7 @@ def _build_svg(title: str, source_key_count: int, rows: list[LangStats]) -> str:
     return "\n".join(parts) + "\n"
 
 
-def _write_stats_md() -> str:
+def _write_stats_md(unlisted_locale_codes: list[str]) -> str:
     lines = [
         "# Translation Stats",
         "",
@@ -218,6 +223,18 @@ def _write_stats_md() -> str:
         "![UI Translation Progress](./assets/translation-progress.svg)",
         "",
     ]
+    if unlisted_locale_codes:
+        codes_fmt = ", ".join(f"`{c}`" for c in unlisted_locale_codes)
+        lines.extend(
+            [
+                "**Note:** The following translation locale(s) exist under `locales/` but are not yet "
+                "listed in `LANGUAGE_NAMES` in "
+                "[`scripts/generate-language-stats.py`](../scripts/generate-language-stats.py): \n"
+                f"{codes_fmt} \n"
+                "Add an English name and autonym tuple for each so the chart labels stay correct.",
+                "",
+            ]
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -246,10 +263,18 @@ def main() -> None:
         key=lambda s: s.code,
     )
 
+    unlisted = _codes_missing_from_language_names(codes)
+    if unlisted:
+        listed = ", ".join(unlisted)
+        print(
+            f"warning: locale(s) present but missing from LANGUAGE_NAMES: {listed}",
+            file=sys.stderr,
+        )
+
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
     svg = _build_svg("LEAPPs UI Translation Progress", total_keys, rows)
     SVG_PATH.write_text(svg, encoding="utf-8")
-    STATS_MD_PATH.write_text(_write_stats_md(), encoding="utf-8")
+    STATS_MD_PATH.write_text(_write_stats_md(unlisted), encoding="utf-8")
 
     print("UI translation stats (translation namespace, English as source)")
     print(f"Source: {SOURCE_FILE}")
