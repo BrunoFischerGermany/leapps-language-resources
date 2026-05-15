@@ -1,0 +1,52 @@
+# Regenerates docs/stats.md and docs/assets/translation-progress.svg from locales/.
+#
+# Runs when commits land on main that touch locales/ (typical: merged PRs that
+# changed UI translation JSON). Manual runs always execute the generator.
+# Commits only when the script actually changes tracked output files.
+
+name: Regenerate translation stats
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "locales/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: regenerate-translation-stats
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Generate stats
+        run: python3 scripts/generate-language-stats.py
+
+      - name: Commit and push if changed
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add docs/assets/translation-progress.svg docs/stats.md
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit (generated files already match)."
+            exit 0
+          fi
+
+          git commit -m "Regenerate translation stats after locale updates."
+          git push
