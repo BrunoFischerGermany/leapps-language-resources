@@ -1,7 +1,8 @@
 {
   "access": "Zugriff",
-  "account": "Account",
+  "account": "Konto",
   "account_email": "Account Email",
-  "achievement": "",
-  "timestamp": "Zeitstempel"
+  "account_login": "Anmeldung",
+  "achievement": "Leistung",
+  "timestamp": "Datum und Uhrzeit"
 }
