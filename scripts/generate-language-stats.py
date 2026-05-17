@@ -215,13 +215,16 @@ def _build_svg(title: str, source_key_count: int, rows: list[LangStats]) -> str:
 
 
 def _write_stats_md(unlisted_locale_codes: list[str]) -> str:
+    # Bust browser/CDN caches when the SVG is regenerated
+    image_v = int(datetime.now().timestamp())
+    image_url = f"./assets/translation-progress.svg?v={image_v}"
     lines = [
         "# Translation Stats",
         "",
         "These numbers are generated from the **UI** `translation_xx.json` files under the `/locales/` directory. ",
         "Empty or whitespace-only values in a locale file count as **untranslated**.",
         "",
-        "![UI Translation Progress](./assets/translation-progress.svg)",
+        f"![UI Translation Progress]({image_url})",
         "",
     ]
     if unlisted_locale_codes:
