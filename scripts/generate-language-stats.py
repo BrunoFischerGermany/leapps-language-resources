@@ -33,6 +33,7 @@ LANGUAGE_NAMES: dict[str, tuple[str, str]] = {
     "en": ("English", "English"),
     "es": ("Spanish", "Español"),
     "fr": ("French", "Français"),
+    "de": ("German", "Deutsch"),
 }
 
 
@@ -217,7 +218,7 @@ def _write_stats_md(unlisted_locale_codes: list[str]) -> str:
     lines = [
         "# Translation Stats",
         "",
-        "These numbers are generated from the **UI** `translation_xx.json` files under `locales/`.",
+        "These numbers are generated from the **UI** `translation_xx.json` files under the `/locales/` directory. ",
         "Empty or whitespace-only values in a locale file count as **untranslated**.",
         "",
         "![UI Translation Progress](./assets/translation-progress.svg)",
