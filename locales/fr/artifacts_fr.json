@@ -1,6 +1,7 @@
 {
   "access": "Accès",
   "account": "Compte",
-  "account_login": "Connexion au compte",
+  "account_email": "Adresse e-mail du compte",
+  "achievement": "Succès",
   "timestamp": "Date et heure"
 }
