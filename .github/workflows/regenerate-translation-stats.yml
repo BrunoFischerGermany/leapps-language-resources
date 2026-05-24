@@ -22,6 +22,7 @@ concurrency:
 
 jobs:
   regenerate:
+    if: github.repository == 'leapps-org/leapps-language-resources'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
