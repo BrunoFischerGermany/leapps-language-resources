@@ -106,7 +106,7 @@
   "filtered_messages_many": "{{count}} Nachrichten wurden herausgefiltert",
   "filtered_messages_other": "{{count}} Nachrichten wurden herausgefiltert",
   "invalid": "Ungültig",
-  "invalid_metadata_format": "Ungültiges Metadata Format",
+  "invalid_metadata_format": "Ungültiges Metadatenformat",
   "loading": "Wird geladen",
   "menu.artifact_tooltip": "{{name}} ({{records}})",
   "menu.category_tooltip": "{{category}} ({{artifacts}}; {{total_records}})",
